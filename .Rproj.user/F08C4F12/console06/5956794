@@ -1,0 +1,5 @@
+]0;~/Documents/Savvy/Training and Development/Reproducible Research Coursera/Week 2/RepData_PeerAssessment1[?1034hJoyvaleries-MBP:RepData_PeerAssessment1 joyoung$ ls
+PA1_template.Rmd		activity.csv			instructions_fig
+README.md			activity.zip
+RepData_PeerAssessment1.Rproj	doc
+]0;~/Documents/Savvy/Training and Development/Reproducible Research Coursera/Week 2/RepData_PeerAssessment1[?1034hJoyvaleries-MacBook-Pro:RepData_PeerAssessment1 joyoung$ git add-A -A

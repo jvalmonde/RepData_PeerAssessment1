@@ -1,0 +1,296 @@
+---
+title: "Time Series"
+author: "Joyvalerie Mondejar"
+date: "4/8/2019"
+output: 
+  html_document:
+    
+    toc: true
+    toc_float: true
+    toc_depth: 3
+    theme: spacelab
+    highlight: tango
+editor_options: 
+  
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE, cache=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(TTR)
+library(forecast)  # to make forecasts for further tiem points
+```
+
+## Reading Time Series Data
+
+```{r, cache=TRUE}
+kings <- scan("http://robjhyndman.com/tsdldata/misc/kings.dat",skip=3)
+kings
+```
+
+```{r}
+kingstimeseries <- ts(kings)
+kingstimeseries
+```
+
+```{r, cache=TRUE}
+births <- scan("http://robjhyndman.com/tsdldata/data/nybirths.dat")
+birthstimeseries <- ts(births, frequency=12, start=c(1946,1))
+birthstimeseries
+```
+
+```{r, cache=TRUE}
+souvenir <- scan("http://robjhyndman.com/tsdldata/data/fancy.dat")
+souvenirtimeseries <- ts(souvenir, frequency=12, start=c(1987,1))
+souvenirtimeseries
+```
+
+## Plotting Time Series
+
+```{r}
+plot.ts(kingstimeseries)
+```
+
+```{r}
+plot.ts(birthstimeseries)
+```
+
+```{r}
+plot.ts(souvenirtimeseries)
+```
+
+```{r}
+logsouvenirtimeseries <- log(souvenirtimeseries)
+plot.ts(logsouvenirtimeseries)
+```
+
+## Decomposing Time Series
+
+Decomposing a time series means separating it into its constituent components, which are usually a trend component and an irregular component, and if it is a seasonal time series, a seasonal component.
+
+### Decomposing Non-Seasonal Data
+
+```{r}
+library(TTR)
+kingstimeseriesSMA3 <- SMA(kingstimeseries,n=3)
+plot.ts(kingstimeseriesSMA3)
+```
+
+```{r}
+kingstimeseriesSMA8 <- SMA(kingstimeseries,n=8)
+plot.ts(kingstimeseriesSMA8)
+```
+
+The data smoothed with a simple moving average of order 8 gives a clearer picture of the trend component, and
+we can see that the age of death of the English kings seems to have decreased from about 55 years old to about 38
+years old during the reign of the first 20 kings, and then increased after that to about 73 years old by the end of the
+reign of the 40th king in the time series.
+
+### Decomposing Seasonal Data
+A seasonal time series consists of a trend component, a seasonal component and an irregular component. Decomposing the time series means separating the time series into these three components: that is, estimating these three components.  
+
+To estimate the trend component and seasonal component of a seasonal time series that can be described using an additive model, we can use the “decompose()” function in R. This function estimates the trend, seasonal, and irregular components of a time series that can be described using an additive model.  
+
+The function “decompose()” returns a list object as its result, where the estimates of the seasonal component, trend component and irregular component are stored in named elements of that list objects, called “seasonal”, “trend”, and “random” respectively.  
+
+For example, as discussed above, the time series of the number of births per month in New York city is seasonal with a peak every summer and trough every winter, and can probably be described using an additive model since the seasonal and random fluctuations seem to be roughly constant in size over time:
+
+To estimate the trend, seasonal and irregular components of this time series, we type:
+```{r}
+birthstimeseriescomponents <- decompose(birthstimeseries)
+```
+
+The estimated values of the seasonal, trend and irregular components are now stored in variables `birthstimeseriescomponents$seasonal`, `birthstimeseriescomponents$trend` and `birthstimeseriescomponents$random`. For example, we can print out the estimated values of the seasonal component by typing:
+
+```{r}
+birthstimeseriescomponents$seasonal # get the estimated values of the seasonal component
+
+```
+
+We can plot the estimated trend, seasonal, and irregular components of the time series by using the “plot()” function, for example:
+```{r}
+plot(birthstimeseriescomponents)
+```
+
+The plot above shows the original time series (top), the estimated trend component (second from top), the estimated seasonal component (third from top), and the estimated irregular component (bottom). We see that the estimated trend component shows a small decrease from about 24 in 1947 to about 22 in 1948, followed by a steady increase from then on to about 27 in 1959.
+
+### Seasonally Adjusting
+
+If you have a seasonal time series that can be described using an additive model, you can seasonally adjust the time series by estimating the seasonal component, and subtracting the estimated seasonal component from the original time series. We can do this using the estimate of the seasonal component calculated by the `“decompose()”` function.
+
+For example, to seasonally adjust the time series of the number of births per month in New York city, we can estimate the seasonal component using “decompose()”, and then subtract the seasonal component from the original time series:
+
+```{r}
+birthstimeseriescomponents <- decompose(birthstimeseries)
+birthstimeseriesseasonallyadjusted <- birthstimeseries - birthstimeseriescomponents$seasonal
+```
+
+We can then plot the seasonally adjusted time series using the “plot()” function, by typing:
+```{r}
+plot(birthstimeseriesseasonallyadjusted)
+```
+
+You can see that the seasonal variation has been removed from the seasonally adjusted time series. The seasonally adjusted time series now just contains the trend component and an irregular component.
+
+## Forecasts using Exponential Smoothing
+
+Exponential smoothing can be used to make short-term forecasts for time series data.
+
+### Simple Exponential Smoothing
+
+- __shfdisjd__
+1. skdjfokd  
+2. ksdofks  
+
+
+If you have a time series that can be described using an additive model with constant level and no seasonality, you can use simple exponential smoothing to make short-term forecasts.
+
+The __simple exponential smoothing__ method provides a way of estimating the level at the current time point. __Smoothing__ is controlled by the parameter alpha; for the estimate of the level at the current time point. The value of alpha; lies between 0 and 1. __Values of alpha that are close to 0 mean that little weight is placed on the most recent observations when making forecasts of future values__.
+
+For example, the file http://robjhyndman.com/tsdldata/hurst/precip1.dat contains total annual rainfall in inches for London, from 1813-1912 (original data from Hipel and McLeod, 1994). We can read the data into R and plot it by typing:
+
+```{r, cache=TRUE}
+rain <- scan("http://robjhyndman.com/tsdldata/hurst/precip1.dat",skip=1)
+rainseries <- ts(rain,start=c(1813))
+plot.ts(rainseries)
+
+```
+
+You can see from the plot that there is roughly constant level (the mean stays constant at about 25 inches). The random fluctuations in the time series seem to be roughly constant in size over time, so it is probably appropriate to describe the data using an additive model. Thus, we can make forecasts using simple exponential smoothing.
+
+To make forecasts using __simple exponential smoothing__ in R, we can fit a simple exponential smoothing predictive model using the “HoltWinters()” function in R. To use `HoltWinters()` for simple exponential smoothing, we need to set the parameters `beta=FALSE` and `gamma=FALSE` in the HoltWinters() function (the beta and gamma parameters are used for Holt’s exponential smoothing, or Holt-Winters exponential smoothing, as described below).
+
+The `HoltWinters()` function returns a list variable, that contains several named elements.
+For example, to use simple exponential smoothing to make forecasts for the time series of annual rainfall in London, we type:
+
+```{r}
+rainseriesforecasts <- HoltWinters(rainseries, beta=FALSE, gamma=FALSE)
+rainseriesforecasts
+
+```
+
+The output of HoltWinters() tells us that the __estimated value of the alpha parameter is about 0.024__. This is very close to zero, telling us that the forecasts are based on both recent and less recent observations (although somewhat more weight is placed on recent observations).
+
+By default, `HoltWinters()` just __makes forecasts for the same time period covered by our original time series__. In this case, our original time series included rainfall for London from 1813-1912, so the forecasts are also for 1813-1912.
+
+In the example above, we have stored the output of the `HoltWinters()` function in the list variable “rainseriesforecasts”. The forecasts made by `HoltWinters()` are stored in a named element of this list variable called “fitted”, so we can get their values by typing:
+
+```{r}
+rainseriesforecasts$fitted
+```
+
+```{r}
+plot(rainseriesforecasts)
+```
+
+The plot shows the original time series in black, and the forecasts as a red line. The time series of forecasts is much smoother than the time series of the original data here.
+
+As a measure of the accuracy of the forecasts, we can calculate the sum of squared errors for the in-sample forecast errors, that is, the forecast errors for the time period covered by our original time series. The sum-ofsquared-errors is stored in a named element of the list variable __“rainseriesforecasts”__ called __“SSE”__, so we can get its value by typing:
+
+```{r}
+rainseriesforecasts$SSE
+```
+
+That is, here the sum-of-squared-errors is 1828.855.
+
+It is common in simple exponential smoothing to use the first value in the time series as the initial value for the level. For example, in the time series for rainfall in London, the first value is 23.56 (inches) for rainfall in 1813.
+
+You can specify the initial value for the level in the `HoltWinters()` function by using the __“l.start”__ parameter. For example, to make forecasts with the initial value of the level set to 23.56, we type:
+
+```{r}
+HoltWinters(rainseries, beta=FALSE, gamma=FALSE, l.start=23.56)
+```
+
+As explained above, by default `HoltWinters()` just makes forecasts for the time period covered by the original data, which is 1813-1912 for the rainfall time series. We can make forecasts for further time points by using the __“forecast.HoltWinters()”__ function in the R __“forecast”__ package. 
+
+When using the `forecast.HoltWinters()` function, as its first argument (input), you pass it the predictive model that you have already fitted using the `HoltWinters()` function. For example, in the case of the rainfall time series, we stored the predictive model made using HoltWinters() in the variable __“rainseriesforecasts”__. You specify how many further time points you want to make forecasts for by using the __“h”__ parameter in `forecast.HoltWinters()`. For
+example, to make a forecast of rainfall for the years 1814-1820 (8 more years) using `forecast.HoltWinters()`, we type:
+
+```{r}
+rainseriesforecasts2 <- forecast:::forecast.HoltWinters(rainseriesforecasts, h=8)
+rainseriesforecasts2
+
+```
+
+The forecast.HoltWinters() function gives you the forecast for a year, a 80% prediction interval for the forecast, and a 95% prediction interval for the forecast. For example, the forecasted rainfall for 1920 is about 24.68 inches, with a 95% prediction interval of (16.24, 33.11).
+
+To plot the predictions made by `forecast.HoltWinters()`, we can use the __“plot.forecast()”__ function:
+
+```{r}
+forecast:::plot.forecast(rainseriesforecasts2)
+```
+
+Here the forecasts for 1913-1920 are plotted as a blue line, the 80% prediction interval as an orange shaded area, and the 95% prediction interval as a yellow shaded area.
+
+The __‘forecast errors’__ are calculated as the __observed values minus predicted values__, for each time point. We can only calculate the forecast errors for the time period covered by our original time series, which is 1813-1912 for the rainfall data. As mentioned above, one __measure of the accuracy__ of the predictive model is the __sum-of-squarederrors (SSE)__ for the in-sample forecast errors.
+
+The __in-sample forecast errors__ are stored in the named element __“residuals”__ of the list variable returned by `forecast.HoltWinters()`. If the predictive model cannot be improved upon, there should be no correlations between forecast errors for successive predictions. In other words, if there are correlations between forecast errors for successive predictions, it is likely that the simple exponential smoothing forecasts could be improved upon by another forecasting technique.
+
+To figure out whether this is the case, we can obtain a __correlogram__ of the in-sample forecast errors for lags 1-20.
+
+We can calculate a correlogram of the forecast errors using the __“acf()”__ function in R. To specify the maximum lag that we want to look at, we use the __“lag.max”__ parameter in `acf()`.
+
+For example, to calculate a correlogram of the in-sample forecast errors for the London rainfall data for lags 1-20, we type:
+
+```{r}
+acf(rainseriesforecasts2$residuals, lag.max=20, na.action = na.pass) # contains missing values
+```
+
+You can see from the sample correlogram that the autocorrelation at lag 3 is just touching the significance bounds.
+
+To test whether there is significant evidence for non-zero correlations at lags 1-20, we can carry out a LjungBox test. This can be done in R using the __“Box.test()”__, function. The maximum lag that we want to look at is specified using the __“lag” parameter__ in the Box.test() function. For example, to test whether there are non-zero autocorrelations at lags 1-20, for the in-sample forecast errors for London rainfall data, we type:
+
+```{r}
+Box.test(rainseriesforecasts2$residuals, lag=20, type="Ljung-Box")
+```
+
+Here the Ljung-Box test statistic is 17.4, and the p-value is 0.6, so there is little evidence of non-zero autocorrelations in the in-sample forecast errors at lags 1-20.
+
+To be sure that the predictive model cannot be improved upon, it is also a good idea to check whether the forecast errors are normally distributed with mean zero and constant variance. To check whether the forecast errors have constant variance, we can make a time plot of the in-sample forecast errors:
+
+```{r}
+plot.ts(rainseriesforecasts2$residuals)
+```
+
+The plot shows that the in-sample forecast errors seem to have roughly constant variance over time, although the size of the fluctuations in the start of the time series (1820-1830) may be slightly less than that at later dates (eg. 1840-1850).
+To check whether the forecast errors are normally distributed with mean zero, we can plot a histogram of the forecast errors, with an overlaid normal curve that has mean zero and the same standard deviation as the distribution of forecast errors. To do this, we can define an R function “plotForecastErrors()”, below:
+
+```{r}
+plotForecastErrors <- function(forecasterrors) {
+  # make a histogram of the forecast errors:
+  
+  mybinsize <- IQR(forecasterrors,na.rm = TRUE)/4
+  mysd <- sd(forecasterrors,na.rm = TRUE)
+  mymin <- min(forecasterrors,na.rm = TRUE) - mysd*5
+  mymax <- max(forecasterrors,na.rm = TRUE) + mysd*3
+  
+  # generate normally distributed data with mean 0 and standard deviation mysd
+  mynorm <- rnorm(10000, mean=0, sd=mysd)
+  mymin2 <- min(mynorm)
+  mymax2 <- max(mynorm)
+  if (mymin2 < mymin) { mymin <- mymin2 }
+  if (mymax2 > mymax) { mymax <- mymax2 }
+  
+  # make a red histogram of the forecast errors, with the normally distributed data overlaid:
+  mybins <- seq(mymin, mymax, mybinsize)
+  hist(forecasterrors, col="cornflowerblue", freq=FALSE, breaks=mybins)
+  # freq=FALSE ensures the area under the histogram = 1
+  # generate normally distributed data with mean 0 and standard deviation mysd
+  myhist <- hist(mynorm, plot=FALSE, breaks=mybins)
+  # plot the normal curve as a blue line on top of the histogram of forecast errors:
+  points(myhist$mids, myhist$density, type="l", col="red", lwd=2)
+}
+```
+
+You will have to copy the function above into R in order to use it. You can then use plotForecastErrors() to plot a histogram (with overlaid normal curve) of the forecast errors for the rainfall predictions:
+
+```{r}
+plotForecastErrors(rainseriesforecasts2$residuals)
+```
+
+The plot shows that the distribution of forecast errors is roughly centred on zero, and is more or less normally distributed, although it seems to be slightly skewed to the right compared to a normal curve. However, the right skew is relatively small, and so it is plausible that the forecast errors are normally distributed with mean zero.
+
+The Ljung-Box test showed that there is little evidence of non-zero autocorrelations in the in-sample forecast errors, and the distribution of forecast errors seems to be normally distributed with mean zero. This suggests that the simple exponential smoothing method provides an adequate predictive model for London rainfall, which probably cannot be improved upon. Furthermore, the assumptions that the 80% and 95% predictions intervals were based upon (that there are no autocorrelations in the forecast errors, and the forecast errors are normally distributed with mean zero and constant variance) are probably valid.
+
+

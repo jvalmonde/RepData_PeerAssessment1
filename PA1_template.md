@@ -7,16 +7,11 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 
-library(data.table)
-library(ggplot2)
-library(scales)
-```
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 activity <- fread("activity.csv")
 activity[, date := as.Date(date)]
 
@@ -33,7 +28,8 @@ plot_theme = theme(axis.line = element_line(color = "Gray", size = 1.5),
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+
+```r
 # Total number of steps taken each day
 PerDay <- activity[, .(Total = sum(steps, na.rm = TRUE)), keyby = date]
 
@@ -42,18 +38,23 @@ ggplot(PerDay, aes(x=Total)) +
   geom_histogram(colour="cornflowerblue", fill="blue", binwidth=1000) +
   labs(x = "Total Steps Per Day") +
   plot_theme
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+```r
 MeanSteps <- PerDay[, mean(Total, na.rm = T)]
 MedianSteps <- PerDay[, median(Total, na.rm = T)]
 ```
 
-The mean number of steps per day is `r round(MeanSteps, 0)`, while the median number of steps is `r MedianSteps`. 
+The mean number of steps per day is 9354, while the median number of steps is 10395. 
 
 
 
 ## What is the average daily activity pattern?
 
-```{r}
+
+```r
 # Getting the average number of steps taken across all days
 PerInterval <- activity[, .(Average = mean(steps, na.rm = T)), keyby = interval]
 
@@ -65,26 +66,37 @@ ggplot(PerInterval, aes(x = interval, y = Average)) +
   scale_y_continuous(limits = c(0, 250),
                    breaks = seq(0, 250, by = 50)) +
   plot_theme
-  
-withMaxSteps <- PerInterval[Average == max(Average), .(interval)][[1]]
-
 ```
 
-The interval `r withMaxSteps` contains the maximum number of steps across all days.
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+
+```r
+withMaxSteps <- PerInterval[Average == max(Average), .(interval)][[1]]
+```
+
+The interval 835 contains the maximum number of steps across all days.
 
 
 
 ## Imputing missing values
-```{r}
+
+```r
 # total number of missing values in the dataset
 activity[is.na(steps), .N]
+```
 
+```
+## [1] 2304
+```
+
+```r
 # Creating a copy of the original dataset, and then the missing data are filled in by the mean of corresponding 5-minute interval 
 activity_new <- copy(activity)
 activity_new[, steps := ifelse(is.na(steps), round(PerInterval$Average, 0), steps)]
 ```
 
-```{r}
+
+```r
 # Total number of steps taken each day
 PerDay <- activity_new[, .(Total = sum(steps)), keyby = date]
 
@@ -93,19 +105,23 @@ ggplot(PerDay, aes(x=Total)) +
   geom_histogram(colour="cornflowerblue", fill="blue", binwidth=1000) +
   labs(x = "Total Steps Per Day") +
   plot_theme
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
+```r
 # mean and median total number of steps taken per day
 MeanSteps <- PerDay[, mean(Total)]
 MedianSteps <- PerDay[, median(Total)]
-
 ```
 
-The mean number of steps per day is `r comma(MeanSteps)`, while the median number of steps is `r comma(MedianSteps)`. 
+The mean number of steps per day is 10,766, while the median number of steps is 10,762. 
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+
+```r
 activity_new[, Day := weekdays(date)]
 activity_new[, DayType := factor(ifelse(Day %in% c("Saturday", "Sunday"), "weekend", "weekday"))]
 
@@ -120,4 +136,6 @@ ggplot(PerInterval, aes(x = interval, y = Average)) +
   plot_theme + 
   facet_grid(DayType ~ .)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
