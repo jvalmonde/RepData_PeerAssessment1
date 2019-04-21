@@ -3,3 +3,53 @@ PA1_template.Rmd		activity.csv			instructions_fig
 README.md			activity.zip
 RepData_PeerAssessment1.Rproj	doc
 ]0;~/Documents/Savvy/Training and Development/Reproducible Research Coursera/Week 2/RepData_PeerAssessment1[?1034hJoyvaleries-MacBook-Pro:RepData_PeerAssessment1 joyoung$ git add-A -A
+]0;~/Documents/Savvy/Training and Development/Reproducible Research Coursera/Week 2/RepData_PeerAssessment1Joyvaleries-MacBook-Pro:RepData_PeerAssessment1 joyoung$ git commit -""m"" ""[CP"u"s"h"i"n"g" "m"y" "a"s"s" [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ci""g"n"m"e"t"n"[1P"[1P"n"t"
+[master 2e7ccae] Pushing my assignment
+ 38 files changed, 18970 insertions(+)
+ create mode 100644 .Rhistory
+ create mode 100644 .Rproj.user/F08C4F12/console06/5956794
+ create mode 100644 .Rproj.user/F08C4F12/console06/5956794.env
+ create mode 100644 .Rproj.user/F08C4F12/console06/INDEX001
+ create mode 100644 .Rproj.user/F08C4F12/pcs/files-pane.pper
+ create mode 100644 .Rproj.user/F08C4F12/pcs/source-pane.pper
+ create mode 100644 .Rproj.user/F08C4F12/pcs/windowlayoutstate.pper
+ create mode 100644 .Rproj.user/F08C4F12/pcs/workbench-pane.pper
+ create mode 100644 .Rproj.user/F08C4F12/rmd-outputs
+ create mode 100644 .Rproj.user/F08C4F12/saved_source_markers
+ create mode 100644 .Rproj.user/F08C4F12/sources/prop/241DAC74
+ create mode 100644 .Rproj.user/F08C4F12/sources/prop/E1D5F662
+ create mode 100644 .Rproj.user/F08C4F12/sources/prop/INDEX
+ create mode 100644 .Rproj.user/F08C4F12/sources/s-5B2074F1/3F3C207B-contents
+ create mode 100644 .Rproj.user/F08C4F12/sources/s-5B2074F1/74C809A3
+ create mode 100644 .Rproj.user/F08C4F12/sources/s-5B2074F1/74C809A3-contents
+ create mode 100644 .Rproj.user/F08C4F12/sources/s-5B2074F1/9A6834B5-contents
+ create mode 100644 .Rproj.user/F08C4F12/sources/s-5B2074F1/DC593B94-contents
+ create mode 100644 .Rproj.user/F08C4F12/sources/s-5B2074F1/F213763-contents
+ create mode 100644 .Rproj.user/F08C4F12/sources/s-5B2074F1/lock_file
+ create mode 100644 .Rproj.user/shared/notebooks/175C03F6-PA1_template/1/F08C4F125B2074F1/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/175C03F6-PA1_template/1/s/c1xtu0lvqufnf/000002.csv
+ create mode 100644 .Rproj.user/shared/notebooks/175C03F6-PA1_template/1/s/c1xtu0lvqufnf/000003.error
+ create mode 100644 .Rproj.user/shared/notebooks/175C03F6-PA1_template/1/s/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/8FDE1AAA-TSA_R/1/s/chunks.json
+ create mode 100644 .Rproj.user/shared/notebooks/patch-chunk-names
+ create mode 100644 .Rproj.user/shared/notebooks/paths
+ create mode 100644 PA1_template.html
+ create mode 100644 PA1_template.md
+ create mode 100644 PA1_template_files/figure-html/unnamed-chunk-2-1.png
+ create mode 100644 PA1_template_files/figure-html/unnamed-chunk-2-2.png
+ create mode 100644 PA1_template_files/figure-html/unnamed-chunk-3-1.png
+ create mode 100644 PA1_template_files/figure-html/unnamed-chunk-5-1.png
+ create mode 100644 PA1_template_files/figure-html/unnamed-chunk-5-2.png
+ create mode 100644 PA1_template_files/figure-html/unnamed-chunk-6-1.png
+ create mode 100644 RepData_PeerAssessment1.Rproj
+ create mode 100644 activity.csv
+]0;~/Documents/Savvy/Training and Development/Reproducible Research Coursera/Week 2/RepData_PeerAssessment1Joyvaleries-MacBook-Pro:RepData_PeerAssessment1 joyoung$ git push
+fatal: unable to access 'https://github.com/jvalmonde/RepData_PeerAssessment1.git/': Could not resolve host: github.com
+]0;~/Documents/Savvy/Training and Development/Reproducible Research Coursera/Week 2/RepData_PeerAssessment1Joyvaleries-MacBook-Pro:RepData_PeerAssessment1 joyoung$ ls
+PA1_template.Rmd		RepData_PeerAssessment1.Rproj
+PA1_template.html		activity.csv
+PA1_template.md			activity.zip
+PA1_template_files		doc
+README.md			instructions_fig
+]0;~/Documents/Savvy/Training and Development/Reproducible Research Coursera/Week 2/RepData_PeerAssessment1Joyvaleries-MacBook-Pro:RepData_PeerAssessment1 joyoung$ lsgit pushcommit -m "Pushing my assiggnment"[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cadd -A[K
+[K[A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
